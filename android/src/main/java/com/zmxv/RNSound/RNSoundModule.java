@@ -23,10 +23,11 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.io.IOException;
-
+// sample header to check if data reflects : 01
 import android.util.Log;
 
 public class RNSoundModule extends ReactContextBaseJavaModule implements AudioManager.OnAudioFocusChangeListener {
+
   Map<Double, MediaPlayer> playerPool = new HashMap<>();
   ReactApplicationContext context;
   final static Object NULL = null;
@@ -42,6 +43,7 @@ public class RNSoundModule extends ReactContextBaseJavaModule implements AudioMa
   }
 
   private void setOnPlay(boolean isPlaying, final Double playerKey) {
+    // this is to play audio tone
     final ReactContext reactContext = this.context;
     WritableMap params = Arguments.createMap();
     params.putBoolean("isPlaying", isPlaying);
@@ -77,16 +79,16 @@ public class RNSoundModule extends ReactContextBaseJavaModule implements AudioMa
       Integer category = null;
       switch (module.category) {
         case "Playback":
-          category = AudioManager.STREAM_MUSIC;
+          category = AudioManager.STREAM_RING;
           break;
         case "Ambient":
-          category = AudioManager.STREAM_NOTIFICATION;
+          category = AudioManager.STREAM_RING;
           break;
         case "System":
-          category = AudioManager.STREAM_SYSTEM;
+          category = AudioManager.STREAM_RING;
           break;
         case "Voice":
-          category = AudioManager.STREAM_VOICE_CALL;
+          category = AudioManager.STREAM_RING;
           break;
         case "Ring":
           category = AudioManager.STREAM_RING;
@@ -172,7 +174,7 @@ public class RNSoundModule extends ReactContextBaseJavaModule implements AudioMa
     }
 
     if (fileName.startsWith("http://") || fileName.startsWith("https://")) {
-      mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+      mediaPlayer.setAudioStreamType(AudioManager.STREAM_RING);
       Log.i("RNSoundModule", fileName);
       try {
         mediaPlayer.setDataSource(fileName);
@@ -207,7 +209,7 @@ public class RNSoundModule extends ReactContextBaseJavaModule implements AudioMa
     
     File file = new File(fileName);
     if (file.exists()) {
-      mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+      mediaPlayer.setAudioStreamType(AudioManager.STREAM_RING);
       Log.i("RNSoundModule", fileName);
       try {
           mediaPlayer.setDataSource(fileName);
@@ -239,7 +241,7 @@ public class RNSoundModule extends ReactContextBaseJavaModule implements AudioMa
     if (!this.mixWithOthers) {
       AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
-      audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+      audioManager.requestAudioFocus(this, AudioManager.STREAM_RING, AudioManager.AUDIOFOCUS_GAIN);
 
       this.focusedPlayerKey = key;
     }
@@ -361,7 +363,7 @@ public class RNSoundModule extends ReactContextBaseJavaModule implements AudioMa
     try {
       AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
-      callback.invoke((float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+      callback.invoke((float) audioManager.getStreamVolume(AudioManager.STREAM_RING) / audioManager.getStreamMaxVolume(AudioManager.STREAM_RING));
     } catch (Exception error) {
       WritableMap e = Arguments.createMap();
       e.putInt("code", -1);
@@ -374,8 +376,8 @@ public class RNSoundModule extends ReactContextBaseJavaModule implements AudioMa
   public void setSystemVolume(final Float value) {
     AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
-    int volume = Math.round(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC) * value);
-    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
+    int volume = Math.round(audioManager.getStreamMaxVolume(AudioManager.STREAM_RING) * value);
+    audioManager.setStreamVolume(AudioManager.STREAM_RING, volume, 0);
   }
 
   @ReactMethod

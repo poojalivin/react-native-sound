@@ -2,8 +2,17 @@ apply plugin: 'com.android.library'
 
 def DEFAULT_COMPILE_SDK_VERSION             = 26
 def DEFAULT_BUILD_TOOLS_VERSION             = "26.0.2"
-def DEFAULT_TARGET_SDK_VERSION              = 26
-
+def DEFAULT_TARGET_SDK_VERSION              = 34
+buildscript {
+  repositories {
+    google()
+    mavenCentral()
+  }
+  dependencies {
+    classpath("com.android.tools.build:gradle:8.0.2") // Use a version compatible with your setup
+    // Other classpath dependencies
+  }
+}
 android {
   namespace 'com.zmxv.RNSound'
     compileSdkVersion rootProject.hasProperty('compileSdkVersion') ? rootProject.compileSdkVersion : DEFAULT_COMPILE_SDK_VERSION
